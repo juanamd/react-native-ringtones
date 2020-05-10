@@ -5,7 +5,7 @@ declare module "react-native-rintones" {
   }
 
   export default interface Ringtones {
-    getRingtones({ type }: { type: string }): Promise<Ringtone[]>;
+    getRingtones({ type }: { type: number }): Promise<Ringtone[]>;
 
     getActualRingtone(): Promise<Ringtone>;
 
