@@ -2,22 +2,23 @@
   "name": "react-native-ringtones",
   "title": "React Native Ringtones",
   "version": "1.0.0",
-  "description": "TODO",
+  "description": "React Native ringtone manager native module",
   "main": "index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-ringtones.git",
-    "baseUrl": "https://github.com/github_account/react-native-ringtones"
+    "url": "git+https://github.com/minhtc/react-native-ringtones.git",
+    "baseUrl": "https://github.com/minhtc/react-native-ringtones"
   },
   "keywords": [
     "react-native"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "minhtc",
+    "email": "minhtcx@gmail.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
