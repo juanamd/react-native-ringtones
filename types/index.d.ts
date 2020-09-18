@@ -9,9 +9,9 @@ declare module "react-native-rintones" {
 
     getActualRingtone(): Promise<Ringtone>;
 
-    setRingrone({ uri }: { uri: string }): Promise<boolean>;
+    setRingtone({ uri }: { uri: string }): Promise<boolean>;
 
-    setNewRingrone({
+    setNewRingtone({
       filepath,
       title,
       mimeType,
@@ -31,7 +31,7 @@ declare module "react-native-rintones" {
       isAlarm: boolean;
       isMusic: boolean;
       isSetDefault: boolean;
-    }): Prmise<Ringtone>;
+    }): Promise<Ringtone>;
 
     deleteRingtone({ uri }: { uri: string }): Promise<boolean>;
 

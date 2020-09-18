@@ -10,22 +10,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/minhtc/react-native-ringtones.git",
-    "baseUrl": "https://github.com/minhtc/react-native-ringtones"
+    "url": "https://github.com/juanamd/react-native-ringtones"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "ringtone",
+    "notification"
   ],
-  "author": {
-    "name": "minhtc",
-    "email": "minhtcx@gmail.com"
-  },
+  "author": "Juan Story",
   "license": "MIT",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
     "react": "^16.8.1",
-    "react-native": ">=0.60.0-rc.0 <1.0.x"
+    "react-native": ">=0.60.0"
   },
   "devDependencies": {
     "react": "^16.9.0",

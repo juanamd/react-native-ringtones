@@ -1,12 +1,9 @@
 # react-native-ringtones
+Based on **[minhtc/react-native-ringtones](https://github.com/minhtc/react-native-ringtones)**
 
 ## Getting started
 
-`$ npm install react-native-ringtones --save`
-
-### Mostly automatic installation
-
-`$ react-native link react-native-ringtones`
+`$ yarn add https://github.com/juanamd/react-native-ringtones`
 
 ## Usage
 
@@ -20,10 +17,14 @@ getRingtones({ type }: { type: number }): Promise<Ringtone[]>;
 getActualRingtone(): Promise<Ringtone>;
 
 // Set rintone
-setRingrone({ uri }: { uri: string }): Promise<boolean>;
+setRingtone({ uri }: { uri: string }): Promise<boolean>;
 
 // Add new ringtone
-setNewRingrone({
+// filepath can be either an audio file accessible by the app (including internal storage)
+//  -> filepath: "/data/user/0/com.myapp/files/my_sound.mp3"
+// or the file name of any resource inside the "raw" folder (without extension)
+//  -> filepath: "my_sound"
+setNewRingtone({
     filepath,
     title,
     mimeType,
@@ -43,7 +44,7 @@ setNewRingrone({
     isAlarm: boolean;
     isMusic: boolean;
     isSetDefault: boolean;
-}): Prmise<Ringtone>;
+}): Promise<Ringtone>;
 
 // Delete ringtone by uri
 deleteRingtone({ uri }: { uri: string }): Promise<boolean>;
@@ -54,11 +55,3 @@ hasPermission(): Promise<boolean>;
 // Request modify system setting to change the ringtone
 requestSettingsPermission(): void;
 ```
-
-## Example
-
-![React Native Ringtone Example](https://github.com/minhtc/react-native-ringtones/raw/master/screenshots/ss.png "React Native Ringtone Example")
-
-## Question?
-
-https://github.com/minhtc/react-native-ringtones/issues

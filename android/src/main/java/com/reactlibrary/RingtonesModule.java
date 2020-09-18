@@ -2,14 +2,12 @@ package com.reactlibrary;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.provider.Settings;
 
 import com.facebook.react.bridge.Promise;
@@ -23,17 +21,11 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
 public class RingtonesModule extends ReactContextBaseJavaModule {
-
-    private final ReactApplicationContext reactContext;
     private final int writeSettingsRequestCode = 11111;
 
     public RingtonesModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
     }
 
     @Override
@@ -79,34 +71,19 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setNewRingrone(ReadableMap settings, Promise promise) {
+    public void setNewRingtone(ReadableMap settings, Promise promise) {
         try {
-            String uriStr = settings.getString("filepath");
-            File ringtone = new File(uriStr);
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.MediaColumns.DATA, ringtone.getAbsolutePath());
-            values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
-            values.put(MediaStore.MediaColumns.SIZE, ringtone.length());
-            values.put(MediaStore.MediaColumns.MIME_TYPE, settings.getString("mimeType"));
-            values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
-            values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
-            values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
-            values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
-            values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
-            if (ringtone.exists() && getCurrentActivity() != null) {
-                ContentResolver contentResolver = getCurrentActivity().getContentResolver();
-                Uri uri = MediaStore.Audio.Media.getContentUriForPath(ringtone.getAbsolutePath());
-                Uri newUri = contentResolver.insert(uri, values);
-                if (settings.getBoolean("isSetDefault")) {
-                    RingtoneManager.setActualDefaultRingtoneUri(getCurrentActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
-                }
-                WritableMap map = new WritableNativeMap();
-                map.putString("uri", newUri.toString());
-                map.putString("title", settings.getString("title"));
-                map.putBoolean("isSetDefault", settings.getBoolean("isSetDefault"));
-                promise.resolve(map);
+            Activity activity = getCurrentActivity();
+            if (activity == null) {
+                promise.reject(new Exception("Null current activity"));
             } else {
-                promise.reject(new FileNotFoundException(("File Not found " + uriStr)));
+                RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext(), activity);
+                Uri uri = ringtoneSetter.set(settings);
+
+                WritableMap map = new WritableNativeMap();
+                map.putString("title", settings.getString("title"));
+                map.putString("uri", uri.toString());
+                promise.resolve(map);
             }
         } catch (Throwable t) {
             promise.reject(t);
@@ -138,7 +115,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setRingrone(ReadableMap settings, Promise promise) {
+    public void setRingtone(ReadableMap settings, Promise promise) {
         try {
             Uri uri = Uri.parse(settings.getString("uri"));
             RingtoneManager.setActualDefaultRingtoneUri(getCurrentActivity(), RingtoneManager.TYPE_RINGTONE, uri);
@@ -153,7 +130,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
         try {
             Uri uri = Uri.parse(settings.getString("uri"));
             ContentResolver contentResolver = getCurrentActivity().getContentResolver();
-            contentResolver.delete(uri,  null, null);
+            contentResolver.delete(uri, null, null);
             promise.resolve(true);
         } catch (Exception ex) {
             promise.reject(ex);
