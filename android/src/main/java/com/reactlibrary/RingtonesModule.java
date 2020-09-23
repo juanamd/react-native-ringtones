@@ -1,6 +1,7 @@
 package com.reactlibrary;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -117,7 +118,8 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setRingtone(ReadableMap settings, Promise promise) {
         try {
-            Uri uri = Uri.parse(settings.getString("uri"));
+            String uriString = settings.getString("uri");
+            Uri uri = uriString != null ? Uri.parse(uriString) : null;
             RingtoneManager.setActualDefaultRingtoneUri(getCurrentActivity(), RingtoneManager.TYPE_RINGTONE, uri);
             promise.resolve(true);
         } catch (Throwable t) {
@@ -140,11 +142,12 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getActualRingtone(Promise promise) {
         try {
-            Uri defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getCurrentActivity().getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+            Context context = getCurrentActivity().getApplicationContext();
+            Uri defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
             Ringtone defaultRingtone = RingtoneManager.getRingtone(getCurrentActivity(), defaultRingtoneUri);
             WritableMap map = new WritableNativeMap();
-            map.putString("uri", defaultRingtoneUri.toString());
-            map.putString("title", defaultRingtone.getTitle(getCurrentActivity().getApplicationContext()));
+            map.putString("uri", defaultRingtoneUri != null ? defaultRingtoneUri.toString() : null);
+            map.putString("title", defaultRingtone != null ? defaultRingtone.getTitle(context): null);
             promise.resolve(map);
         } catch (Exception ex) {
             promise.reject(ex);

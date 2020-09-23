@@ -1,7 +1,7 @@
 {
   "name": "react-native-ringtones",
   "title": "React Native Ringtones",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native ringtone manager native module",
   "main": "index.js",
   "types": "types/index.d.ts",

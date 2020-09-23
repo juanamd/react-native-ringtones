@@ -9,7 +9,7 @@ declare module "react-native-rintones" {
 
     getActualRingtone(): Promise<Ringtone>;
 
-    setRingtone({ uri }: { uri: string }): Promise<boolean>;
+    setRingtone({ uri }: { uri: string | void }): Promise<boolean>;
 
     setNewRingtone({
       filepath,
