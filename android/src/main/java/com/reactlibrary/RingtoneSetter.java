@@ -119,15 +119,15 @@ public class RingtoneSetter {
 	private ContentValues getContentValues(File ringtoneFile) {
 		ContentValues values = new ContentValues();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) values.put(MediaStore.MediaColumns.DATA, ringtoneFile.getAbsolutePath());
+		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
 		values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.DISPLAY_NAME, settings.getString("title"));
-		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
 		values.put(MediaStore.MediaColumns.MIME_TYPE, settings.hasKey("mimeType") ? settings.getString("mimeType") : getMimeType());
-		values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
-		values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
-		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
-		values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
-		values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
+		if (settings.hasKey("artist")) values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
+		if (settings.hasKey("isRingtone")) values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
+		if (settings.hasKey("isNotification")) values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
+		if (settings.hasKey("isAlarm")) values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
+		if (settings.hasKey("isMusic")) values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
 		return values;
 	}
 
