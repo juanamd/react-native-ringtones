@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.webkit.MimeTypeMap;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
@@ -121,12 +122,21 @@ public class RingtoneSetter {
 		values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.DISPLAY_NAME, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
-		values.put(MediaStore.MediaColumns.MIME_TYPE, settings.getString("mimeType"));
+		values.put(MediaStore.MediaColumns.MIME_TYPE, settings.hasKey("mimeType") ? settings.getString("mimeType") : getMimeType());
 		values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
 		values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
 		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
 		values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
 		values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
 		return values;
+	}
+
+	private String getMimeType() {
+		String mType = null;
+		String mExtension = MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
+		if (mExtension != null) {
+			mType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mExtension);
+		}
+		return mType;
 	}
 }
