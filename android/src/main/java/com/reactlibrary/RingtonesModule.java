@@ -100,7 +100,6 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
             } else {
                 ringtoneManager.setType(settings.getInt("type"));
             }
-            ringtoneManager.setType(RingtoneManager.TYPE_ALL);
             Cursor cursor = ringtoneManager.getCursor();
             WritableArray list = new WritableNativeArray();
             while (cursor.moveToNext()) {
