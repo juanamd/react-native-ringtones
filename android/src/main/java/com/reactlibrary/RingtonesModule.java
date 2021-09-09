@@ -102,6 +102,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
             }
             Cursor cursor = ringtoneManager.getCursor();
             WritableArray list = new WritableNativeArray();
+            cursor.moveToFirst();
             while (cursor.moveToNext()) {
                 WritableMap map = new WritableNativeMap();
                 map.putString("title", cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX));
