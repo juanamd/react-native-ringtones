@@ -7,6 +7,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
@@ -89,16 +90,14 @@ public class RingtoneSetter {
 	}
 
 	private Uri getRingtoneUri(File file) throws IOException {
-		ContentValues values = getContentValues(file);
-		ContentResolver contentResolver = activity.getContentResolver();
-		String externalFilesPath = context.getExternalFilesDir(null).getPath();
-		String dstPath = externalFilesPath + File.separator + context.getPackageName() + File.separator;
-		File externalFile = exportFile(file, new File(dstPath), settings.getString("title"));
+		String externalFilesPath = context.getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getPath();
+		String name = settings.getString("title") + "." + MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
+		File externalFile = exportFile(file, new File(externalFilesPath), name);
 
-		values.put(MediaStore.MediaColumns.DATA, externalFile.getAbsolutePath());
+		ContentResolver contentResolver = activity.getContentResolver();
 		Uri uri = MediaStore.Audio.Media.getContentUriForPath(externalFile.getAbsolutePath());
 		contentResolver.delete(uri, MediaStore.MediaColumns.DATA + "=\"" + externalFile.getAbsolutePath() + "\"", null);
-		Uri newUri = contentResolver.insert(uri, values);
+		Uri newUri = contentResolver.insert(uri, getContentValues(externalFile));
 
 		return newUri;
 	}
