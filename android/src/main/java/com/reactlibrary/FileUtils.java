@@ -17,36 +17,36 @@ public class FileUtils {
 		return resId != 0;
 	}
 
-    public static File bundledResourceToFile(ReactApplicationContext context, String fileName) throws IOException {
-        File file = new File(context.getCacheDir() + File.separator + fileName);
-        int resId = context.getResources().getIdentifier(fileName, "raw", context.getPackageName());
-        InputStream inputStream = context.getResources().openRawResource(resId);
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        byte buf[] = new byte[1024];
-        int len;
+	public static File bundledResourceToFile(ReactApplicationContext context, String fileName) throws IOException {
+		File file = new File(context.getCacheDir() + File.separator + fileName);
+		int resId = context.getResources().getIdentifier(fileName, "raw", context.getPackageName());
+		InputStream inputStream = context.getResources().openRawResource(resId);
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		byte buf[] = new byte[1024];
+		int len;
 
-        while((len = inputStream.read(buf)) > 0) {
-            fileOutputStream.write(buf, 0, len);
-        }
-        fileOutputStream.close();
-        inputStream.close();
+		while((len = inputStream.read(buf)) > 0) {
+			fileOutputStream.write(buf, 0, len);
+		}
+		fileOutputStream.close();
+		inputStream.close();
 
-        return file;
-    }
+		return file;
+	}
 
-    public static File copyFile(File src, String dstPath, String name) throws IOException {
+	public static File copyFile(File src, String dstPath, String name) throws IOException {
 		File dstDir = new File(dstPath);
-        if (!dstDir.exists() && !dstDir.mkdir()) throw new IOException("Can't create destination file directory");
+		if (!dstDir.exists() && !dstDir.mkdir()) throw new IOException("Can't create destination file directory");
 
-        File expFile = new File(dstDir.getPath() + File.separator + name);
-        FileChannel inChannel = new FileInputStream(src).getChannel();
-        FileChannel outChannel = new FileOutputStream(expFile).getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        if (inChannel != null) inChannel.close();
-        if (outChannel != null) outChannel.close();
+		File expFile = new File(dstDir.getPath() + File.separator + name);
+		FileChannel inChannel = new FileInputStream(src).getChannel();
+		FileChannel outChannel = new FileOutputStream(expFile).getChannel();
+		inChannel.transferTo(0, inChannel.size(), outChannel);
+		if (inChannel != null) inChannel.close();
+		if (outChannel != null) outChannel.close();
 
-        return expFile;
-    }
+		return expFile;
+	}
 
 	public static void copyFileToOutputStream(File file, OutputStream os) throws IOException {
 		int size = (int) file.length();
