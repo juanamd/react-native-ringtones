@@ -74,21 +74,6 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void setNewRingtone(ReadableMap settings, Promise promise) {
-		try {
-			RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext(), settings);
-			Uri uri = ringtoneSetter.set();
-
-			WritableMap map = new WritableNativeMap();
-			map.putString("title", settings.getString("title"));
-			map.putString("uri", uri.toString());
-			promise.resolve(map);
-		} catch (Throwable t) {
-			promise.reject(t);
-		}
-	}
-
-	@ReactMethod
 	public void getRingtones(int type, Promise promise) {
 		try {
 			RingtoneManager ringtoneManager = new RingtoneManager(getReactApplicationContext());
@@ -131,10 +116,24 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void setRingtone(ReadableMap settings, Promise promise) {
+	public void setNewRingtone(ReadableMap settings, Promise promise) {
 		try {
-			String uriString = settings.getString("uri");
-			Uri uri = uriString != null ? Uri.parse(uriString) : null;
+			RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext(), settings);
+			Uri uri = ringtoneSetter.set();
+
+			WritableMap map = new WritableNativeMap();
+			map.putString("title", settings.getString("title"));
+			map.putString("uri", uri.toString());
+			promise.resolve(map);
+		} catch (Throwable t) {
+			promise.reject(t);
+		}
+	}
+
+	@ReactMethod
+	public void setRingtone(String uriString, Promise promise) {
+		try {
+			Uri uri = uriString == null ? null : Uri.parse(uriString);
 			RingtoneManager.setActualDefaultRingtoneUri(getReactApplicationContext(), RingtoneManager.TYPE_RINGTONE, uri);
 			promise.resolve(true);
 		} catch (Throwable t) {
@@ -143,9 +142,9 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void deleteRingtone(ReadableMap settings, Promise promise) {
+	public void deleteRingtone(String uriString, Promise promise) {
 		try {
-			Uri uri = Uri.parse(settings.getString("uri"));
+			Uri uri = Uri.parse(uriString);
 			ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
 			contentResolver.delete(uri, null, null);
 			promise.resolve(true);
@@ -162,7 +161,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 			Ringtone defaultRingtone = RingtoneManager.getRingtone(context, defaultRingtoneUri);
 			WritableMap map = new WritableNativeMap();
 			map.putString("uri", defaultRingtoneUri != null ? defaultRingtoneUri.toString() : null);
-			map.putString("title", defaultRingtone != null ? defaultRingtone.getTitle(context): null);
+			map.putString("title", defaultRingtone != null ? defaultRingtone.getTitle(context) : null);
 			promise.resolve(map);
 		} catch (Exception ex) {
 			promise.reject(ex);
