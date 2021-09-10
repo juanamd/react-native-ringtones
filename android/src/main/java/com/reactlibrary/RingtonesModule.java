@@ -59,13 +59,15 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	private void requestSettingsPermission(Promise promise) {
 		try {
 			ReactApplicationContext application = getReactApplicationContext();
-			if (!hasSettingsPermission()) {
+			boolean hasPermission = hasSettingsPermission();
+			if (!hasPermission) {
 				Intent intent = new Intent(
 					Settings.ACTION_MANAGE_WRITE_SETTINGS,
 					Uri.parse("package:" + application.getPackageName())
 				);
 				application.startActivityForResult(intent, this.writeSettingsRequestCode, null);
 			}
+			promise.resolve(!hasPermission);
 		} catch (Exception ex) {
 			promise.reject(ex);
 		}
