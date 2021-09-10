@@ -74,18 +74,13 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setNewRingtone(ReadableMap settings, Promise promise) {
         try {
-            Activity activity = getCurrentActivity();
-            if (activity == null) {
-                promise.reject(new Exception("Null current activity"));
-            } else {
-                RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext(), activity);
-                Uri uri = ringtoneSetter.set(settings);
+            RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext());
+            Uri uri = ringtoneSetter.set(settings);
 
-                WritableMap map = new WritableNativeMap();
-                map.putString("title", settings.getString("title"));
-                map.putString("uri", uri.toString());
-                promise.resolve(map);
-            }
+            WritableMap map = new WritableNativeMap();
+            map.putString("title", settings.getString("title"));
+            map.putString("uri", uri.toString());
+            promise.resolve(map);
         } catch (Throwable t) {
             promise.reject(t);
         }

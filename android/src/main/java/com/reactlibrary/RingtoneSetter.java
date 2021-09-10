@@ -1,6 +1,5 @@
 package com.reactlibrary;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.media.Ringtone;
@@ -27,11 +26,9 @@ import java.nio.channels.FileChannel;
 public class RingtoneSetter {
 	private ReactApplicationContext context;
 	private ReadableMap settings;
-	private Activity activity;
 
-	public RingtoneSetter(ReactApplicationContext context, Activity activity) {
+	public RingtoneSetter(ReactApplicationContext context) {
 		this.context = context;
-		this.activity = activity;
 	}
 
 	public Uri set(ReadableMap settings) throws IOException, FileNotFoundException {
@@ -43,7 +40,7 @@ public class RingtoneSetter {
 		if (!file.exists()) throw new FileNotFoundException("File not found: " + filePath);
 
 		Uri uri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? getApi29RingtoneUri(file) : getRingtoneUri(file);
-		if (settings.getBoolean("isSetDefault")) RingtoneManager.setActualDefaultRingtoneUri(activity, RingtoneManager.TYPE_RINGTONE, uri);
+		if (settings.getBoolean("isSetDefault")) RingtoneManager.setActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE, uri);
 		if (cacheFile != null) cacheFile.delete();
 
 		return uri;
@@ -73,7 +70,7 @@ public class RingtoneSetter {
 
 	private Uri getApi29RingtoneUri(File file) throws IOException {
 		ContentValues values = getContentValues(file);
-		ContentResolver contentResolver = activity.getContentResolver();
+		ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 		OutputStream os = contentResolver.openOutputStream(uri);
 		int size = (int) file.length();
@@ -94,7 +91,7 @@ public class RingtoneSetter {
 		String name = settings.getString("title") + "." + MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
 		File externalFile = exportFile(file, new File(externalFilesPath), name);
 
-		ContentResolver contentResolver = activity.getContentResolver();
+		ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = MediaStore.Audio.Media.getContentUriForPath(externalFile.getAbsolutePath());
 		contentResolver.delete(uri, MediaStore.MediaColumns.DATA + "=\"" + externalFile.getAbsolutePath() + "\"", null);
 		Uri newUri = contentResolver.insert(uri, getContentValues(externalFile));
