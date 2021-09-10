@@ -87,14 +87,10 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void getRingtones(ReadableMap settings, Promise promise) {
+	public void getRingtones(int type, Promise promise) {
 		try {
 			RingtoneManager ringtoneManager = new RingtoneManager(getReactApplicationContext());
-			if (settings.isNull("type")) {
-				ringtoneManager.setType(RingtoneManager.TYPE_ALL);
-			} else {
-				ringtoneManager.setType(settings.getInt("type"));
-			}
+			ringtoneManager.setType(type);
 			Cursor cursor = ringtoneManager.getCursor();
 			WritableArray list = new WritableNativeArray();
 			cursor.moveToFirst();
