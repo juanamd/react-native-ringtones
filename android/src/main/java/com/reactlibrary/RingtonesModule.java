@@ -131,8 +131,8 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 			map.putString("title", settings.getString("title"));
 			map.putString("uri", uri.toString());
 			promise.resolve(map);
-		} catch (Throwable t) {
-			promise.reject(t);
+		} catch (Exception ex) {
+			promise.reject(ex);
 		}
 	}
 
@@ -141,9 +141,9 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 		try {
 			Uri uri = uriString == null ? null : Uri.parse(uriString);
 			RingtoneManager.setActualDefaultRingtoneUri(getReactApplicationContext(), RingtoneManager.TYPE_RINGTONE, uri);
-			promise.resolve(true);
-		} catch (Throwable t) {
-			promise.reject(t);
+			promise.resolve(null);
+		} catch (Exception ex) {
+			promise.reject(ex);
 		}
 	}
 
@@ -152,8 +152,8 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 		try {
 			Uri uri = Uri.parse(uriString);
 			ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
-			contentResolver.delete(uri, null, null);
-			promise.resolve(true);
+			int deletedRows = contentResolver.delete(uri, null, null);
+			promise.resolve(deletedRows);
 		} catch (Exception ex) {
 			promise.reject(ex);
 		}
