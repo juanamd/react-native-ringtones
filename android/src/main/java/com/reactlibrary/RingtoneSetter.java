@@ -121,7 +121,7 @@ public class RingtoneSetter {
 		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
 		values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.DISPLAY_NAME, settings.getString("title"));
-		values.put(MediaStore.MediaColumns.MIME_TYPE, settings.hasKey("mimeType") ? settings.getString("mimeType") : getMimeType());
+		values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType());
 		if (settings.hasKey("artist")) values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
 		if (settings.hasKey("isRingtone")) values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
 		if (settings.hasKey("isNotification")) values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
@@ -131,11 +131,8 @@ public class RingtoneSetter {
 	}
 
 	private String getMimeType() {
-		String mType = null;
-		String mExtension = MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
-		if (mExtension != null) {
-			mType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mExtension);
-		}
-		return mType;
+		if (settings.hasKey("mimeType")) return settings.getString("mimeType");
+		String extension = MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
+		return extension == null ? null : MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
 	}
 }
