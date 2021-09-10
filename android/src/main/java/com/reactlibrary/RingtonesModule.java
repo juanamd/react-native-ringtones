@@ -89,7 +89,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getRingtones(ReadableMap settings, Promise promise) {
         try {
-            RingtoneManager ringtoneManager = new RingtoneManager(getCurrentActivity());
+            RingtoneManager ringtoneManager = new RingtoneManager(getReactApplicationContext());
             if (settings.isNull("type")) {
                 ringtoneManager.setType(RingtoneManager.TYPE_ALL);
             } else {
@@ -115,7 +115,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
         try {
             String uriString = settings.getString("uri");
             Uri uri = uriString != null ? Uri.parse(uriString) : null;
-            RingtoneManager.setActualDefaultRingtoneUri(getCurrentActivity(), RingtoneManager.TYPE_RINGTONE, uri);
+            RingtoneManager.setActualDefaultRingtoneUri(getReactApplicationContext(), RingtoneManager.TYPE_RINGTONE, uri);
             promise.resolve(true);
         } catch (Throwable t) {
             promise.reject(t);
@@ -126,7 +126,7 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     public void deleteRingtone(ReadableMap settings, Promise promise) {
         try {
             Uri uri = Uri.parse(settings.getString("uri"));
-            ContentResolver contentResolver = getCurrentActivity().getContentResolver();
+            ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
             contentResolver.delete(uri, null, null);
             promise.resolve(true);
         } catch (Exception ex) {
@@ -137,9 +137,9 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getActualRingtone(Promise promise) {
         try {
-            Context context = getCurrentActivity().getApplicationContext();
+            Context context = getReactApplicationContext();
             Uri defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
-            Ringtone defaultRingtone = RingtoneManager.getRingtone(getCurrentActivity(), defaultRingtoneUri);
+            Ringtone defaultRingtone = RingtoneManager.getRingtone(context, defaultRingtoneUri);
             WritableMap map = new WritableNativeMap();
             map.putString("uri", defaultRingtoneUri != null ? defaultRingtoneUri.toString() : null);
             map.putString("title", defaultRingtone != null ? defaultRingtone.getTitle(context): null);
