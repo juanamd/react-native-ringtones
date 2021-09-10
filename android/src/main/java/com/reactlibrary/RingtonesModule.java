@@ -74,8 +74,8 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setNewRingtone(ReadableMap settings, Promise promise) {
         try {
-            RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext());
-            Uri uri = ringtoneSetter.set(settings);
+            RingtoneSetter ringtoneSetter = new RingtoneSetter(getReactApplicationContext(), settings);
+            Uri uri = ringtoneSetter.set();
 
             WritableMap map = new WritableNativeMap();
             map.putString("title", settings.getString("title"));
