@@ -3,12 +3,14 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.provider.Settings;
 
 import com.facebook.react.bridge.Promise;
@@ -98,6 +100,28 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 				WritableMap map = new WritableNativeMap();
 				map.putString("title", cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX));
 				map.putString("uri", cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(RingtoneManager.ID_COLUMN_INDEX));
+				list.pushMap(map);
+			}
+			promise.resolve(list);
+		} catch (Exception ex) {
+			promise.reject(ex);
+		}
+	}
+
+	@ReactMethod
+	public void getMediaStoreRingtones(Promise promise) {
+		try {
+			Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			String[] projection = { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE };
+			ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
+			Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+			WritableArray list = new WritableNativeArray();
+			cursor.moveToPosition(-1);
+			while (cursor.moveToNext()) {
+				WritableMap map = new WritableNativeMap();
+				long contentId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+				map.putString("title", cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
+				map.putString("uri", ContentUris.withAppendedId(uri, contentId).toString());
 				list.pushMap(map);
 			}
 			promise.resolve(list);
