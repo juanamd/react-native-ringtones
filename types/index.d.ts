@@ -1,42 +1,29 @@
 declare module "react-native-rintones" {
-  export interface Ringtone {
-    title: string;
-    uri: string;
-  }
+	export type Ringtone = {
+		title: string,
+		uri: string,
+	}
 
-  export default interface Ringtones {
-    getRingtones({ type }: { type: number }): Promise<Ringtone[]>;
+	export type RingtoneParams = {
+		filepath: string,
+		title: string,
+		mimeType?: string,
+		artist?: string,
+		isRingtone?: boolean,
+		isNotification?: boolean,
+		isAlarm?: boolean,
+		isMusic?: boolean,
+		isSetDefault?: boolean,
+	}
 
-    getActualRingtone(): Promise<Ringtone>;
-
-    setRingtone({ uri }: { uri: string | void }): Promise<boolean>;
-
-    setNewRingtone({
-      filepath,
-      title,
-      mimeType,
-      artist,
-      isRingtone,
-      isNotification,
-      isAlarm,
-      isMusic,
-      isSetDefault,
-    }: {
-      filepath: string;
-      title: string;
-      mimeType: string;
-      artist: string;
-      isRingtone: boolean;
-      isNotification: boolean;
-      isAlarm: boolean;
-      isMusic: boolean;
-      isSetDefault: boolean;
-    }): Promise<Ringtone>;
-
-    deleteRingtone({ uri }: { uri: string }): Promise<boolean>;
-
-    hasPermission(): Promise<boolean>;
-
-    requestSettingsPermission(): void;
-  }
+	export default interface Ringtones {
+		getRingtones(type: number): Promise<Ringtone[]>;
+		getMediaStoreRingtones(type: number): Promise<Ringtone[]>;
+		getActualRingtone(): Promise<Ringtone>;
+		setRingtone(uri: string | void): Promise<void>;
+		setNewRingtone(params: RingtoneParams): Promise<Ringtone>;
+		deleteRingtone(uri: string): Promise<number>;
+		hasSettingsPermission(): Promise<boolean>;
+		requestSettingsPermission(): Promise<boolean>;
+	}
 }
