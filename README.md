@@ -3,55 +3,39 @@ Based on **[minhtc/react-native-ringtones](https://github.com/minhtc/react-nativ
 
 ## Getting started
 
-`$ yarn add https://github.com/juanamd/react-native-ringtones`
+    yarn add https://github.com/juanamd/react-native-ringtones
 
 ## Usage
 
-```javascript
-import Ringtones from 'react-native-ringtones';
+```typescript
+import Ringtones, { Ringtone, RingtoneParams, RINGTONE_TYPES } from 'react-native-ringtones';
 
-// Get all ringtones
-getRingtones({ type }: { type: number }): Promise<Ringtone[]>;
+// Get all ringtones. Use RINGTONE_TYPES constants
+Ringtones.getRingtones(type: number): Promise<Ringtone[]>;
+
+// Get only the ringtones available from MediaStore
+Ringtones.getMediaStoreRingtones(): Promise<Ringtone[]>;
 
 // Get current active ringtone
-getActualRingtone(): Promise<Ringtone>;
+Ringtones.getActualRingtone(): Promise<Ringtone>;
 
 // Set rintone
-setRingtone({ uri }: { uri: string }): Promise<boolean>;
+Ringtones.setRingtone(uri: string): Promise<void>;
 
-// Add new ringtone
-// filepath can be either an audio file accessible by the app (including internal storage)
-//  -> filepath: "/data/user/0/com.myapp/files/my_sound.mp3"
-// or the file name of any resource inside the "raw" folder (without extension)
-//  -> filepath: "my_sound"
-setNewRingtone({
-    filepath,
-    title,
-    mimeType,
-    artist,
-    isRingtone,
-    isNotification,
-    isAlarm,
-    isMusic,
-    isSetDefault,
-}: {
-    filepath: string;
-    title: string;
-    mimeType: string;
-    artist: string;
-    isRingtone: boolean;
-    isNotification: boolean;
-    isAlarm: boolean;
-    isMusic: boolean;
-    isSetDefault: boolean;
-}): Promise<Ringtone>;
+/* Add new ringtone.
+filepath can be either an audio file accessible by the app (including internal storage)
+-> filepath: "/data/user/0/com.myapp/files/my_sound.mp3"
+or the file name of any resource inside the "raw" folder (without extension)
+-> filepath: "my_sound" */
+Ringtones.setNewRingtone(params: RingtoneParams): Promise<Ringtone>;
 
-// Delete ringtone by uri
-deleteRingtone({ uri }: { uri: string }): Promise<boolean>;
+// Delete ringtone by uri. Returns number of deleted items
+Ringtones.deleteRingtone(uri: string): Promise<number>;
 
-// Check modify system settings
-hasPermission(): Promise<boolean>;
+// Check if access to ACTION_MANAGE_WRITE_SETTINGS has been granted
+Ringtones.hasSettingsPermission(): Promise<boolean>;
 
-// Request modify system setting to change the ringtone
-requestSettingsPermission(): void;
+// Request the user to enable ACTION_MANAGE_WRITE_SETTINGS permission
+// Returns false if the permission has already been granted
+Ringtones.requestSettingsPermission(): Promise<boolean>;
 ```
