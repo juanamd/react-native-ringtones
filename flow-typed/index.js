@@ -1,10 +1,10 @@
 declare module "react-native-ringtones" {
-	declare type Ringtone = {
+	declare export type Ringtone = {
 		title: string,
 		uri: string,
 	}
 
-	declare type RingtoneParams = {
+	declare export type RingtoneParams = {
 		filepath: string,
 		title: string,
 		mimeType?: string,
@@ -15,6 +15,10 @@ declare module "react-native-ringtones" {
 		isMusic?: boolean,
 		isSetDefault?: boolean,
 	}
+
+	declare export var RINGTONE_TYPES: {
+		[key: "TYPE_ALL" | "TYPE_RINGTONE" | "TYPE_NOTIFICATION" | "TYPE_ALARM"]: number
+	};
 
 	declare export default class Ringtones {
 		static getRingtones(type: number): Promise<Ringtone[]>;

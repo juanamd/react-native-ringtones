@@ -16,6 +16,10 @@ declare module "react-native-ringtones" {
 		isSetDefault?: boolean,
 	}
 
+	export const RINGTONE_TYPES: { 
+		[key: "TYPE_ALL" | "TYPE_RINGTONE" | "TYPE_NOTIFICATION" | "TYPE_ALARM"]: number
+	};
+
 	export default class Ringtones {
 		static getRingtones(type: number): Promise<Ringtone[]>;
 		static getMediaStoreRingtones(): Promise<Ringtone[]>;
