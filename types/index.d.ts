@@ -1,4 +1,4 @@
-declare module "react-native-rintones" {
+declare module "react-native-ringtones" {
 	export type Ringtone = {
 		title: string,
 		uri: string,
@@ -16,14 +16,14 @@ declare module "react-native-rintones" {
 		isSetDefault?: boolean,
 	}
 
-	export default interface Ringtones {
-		getRingtones(type: number): Promise<Ringtone[]>;
-		getMediaStoreRingtones(type: number): Promise<Ringtone[]>;
-		getActualRingtone(): Promise<Ringtone>;
-		setRingtone(uri: string | void): Promise<void>;
-		setNewRingtone(params: RingtoneParams): Promise<Ringtone>;
-		deleteRingtone(uri: string): Promise<number>;
-		hasSettingsPermission(): Promise<boolean>;
-		requestSettingsPermission(): Promise<boolean>;
+	export default class Ringtones {
+		static getRingtones(type: number): Promise<Ringtone[]>;
+		static getMediaStoreRingtones(): Promise<Ringtone[]>;
+		static getActualRingtone(): Promise<Ringtone>;
+		static setRingtone(uri: string | null): Promise<void>;
+		static setNewRingtone(params: RingtoneParams): Promise<Ringtone>;
+		static deleteRingtone(uri: string): Promise<number>;
+		static hasSettingsPermission(): Promise<boolean>;
+		static requestSettingsPermission(): Promise<boolean>;
 	}
 }
