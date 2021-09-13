@@ -69,6 +69,7 @@ public class RingtoneSetter {
 	private ContentValues getContentValues(File ringtoneFile) {
 		ContentValues values = new ContentValues();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) values.put(MediaStore.MediaColumns.DATA, ringtoneFile.getAbsolutePath());
+		else values.put(MediaStore.MediaColumns.RELATIVE_PATH, getRelativePath());
 		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
 		values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.DISPLAY_NAME, settings.getString("title"));
@@ -79,6 +80,14 @@ public class RingtoneSetter {
 		if (settings.hasKey("isAlarm")) values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
 		if (settings.hasKey("isMusic")) values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
 		return values;
+	}
+
+	private String getRelativePath() {
+		if (settings.hasKey("isRingtone") && settings.getBoolean("isRingtone")) return Environment.DIRECTORY_RINGTONES;
+		if (settings.hasKey("isNotification") && settings.getBoolean("isNotification")) return Environment.DIRECTORY_NOTIFICATIONS;
+		if (settings.hasKey("isAlarm") && settings.getBoolean("isAlarm")) return Environment.DIRECTORY_ALARMS;
+		if (settings.hasKey("isMusic") && settings.getBoolean("isMusic")) return Environment.DIRECTORY_MUSIC;
+		return null;
 	}
 
 	private String getMimeType() {
