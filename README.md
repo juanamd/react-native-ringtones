@@ -5,6 +5,9 @@ Based on **[minhtc/react-native-ringtones](https://github.com/minhtc/react-nativ
 
     yarn add https://github.com/juanamd/react-native-ringtones
 
+## Permissions
+If your app is used on devices that run Android API 18 or lower, you should add the `WRITE_EXTERNAL_STORAGE` permission to your app manifest, as described [here](https://developer.android.com/training/data-storage).
+
 ## Usage
 
 ```typescript
