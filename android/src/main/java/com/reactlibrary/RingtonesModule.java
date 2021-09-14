@@ -37,9 +37,14 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	}
 
 	public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-		if (requestCode == this.writeSettingsRequestCode) {
-			onPermissionResult();
-		}
+		if (requestCode != this.writeSettingsRequestCode) return;
+		try {
+			WritableMap payload = new WritableNativeMap();
+			payload.putBoolean("hasPermission", hasSettingsPermission());
+			getReactApplicationContext()
+				.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				.emit("writeSettingsPermission", payload);
+		} catch (Exception ex) {}
 	}
 
 	@ReactMethod
@@ -60,25 +65,19 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	private void requestSettingsPermission(Promise promise) {
 		try {
-			ReactApplicationContext application = getReactApplicationContext();
 			boolean hasPermission = hasSettingsPermission();
-			if (!hasPermission) {
-				Intent intent = new Intent(
-					Settings.ACTION_MANAGE_WRITE_SETTINGS,
-					Uri.parse("package:" + application.getPackageName())
-				);
-				application.startActivityForResult(intent, this.writeSettingsRequestCode, null);
-			}
+			if (!hasPermission) startSettingsPermissionActivity();
 			promise.resolve(!hasPermission);
 		} catch (Exception ex) {
 			promise.reject(ex);
 		}
 	}
 
-	public void onPermissionResult() {
-		WritableMap payload = new WritableNativeMap();
-		payload.putBoolean("hasPermission", hasSettingsPermission());
-		getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("writeSettingsPermission", payload);
+	private void startSettingsPermissionActivity() {
+		ReactApplicationContext context = getReactApplicationContext();
+		Uri uri = Uri.parse("package:" + context.getPackageName());
+		Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri);
+		context.startActivityForResult(intent, this.writeSettingsRequestCode, null);
 	}
 
 	@ReactMethod
