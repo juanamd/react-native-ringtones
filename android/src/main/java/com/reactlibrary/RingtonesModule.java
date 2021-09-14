@@ -44,15 +44,17 @@ public class RingtonesModule extends ReactContextBaseJavaModule {
 
 	@ReactMethod
 	public void hasSettingsPermission(Promise promise) {
-		promise.resolve(hasSettingsPermission());
+		try {
+			boolean hasPermission = hasSettingsPermission();
+			promise.resolve(hasPermission);
+		} catch (Exception ex) {
+			promise.reject(ex);
+		}
 	}
 
 	private boolean hasSettingsPermission() {
-		boolean hasPermission = true;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			hasPermission = Settings.System.canWrite(getReactApplicationContext());
-		}
-		return hasPermission;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
+		return Settings.System.canWrite(getReactApplicationContext());
 	}
 
 	@ReactMethod
