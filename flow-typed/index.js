@@ -17,7 +17,10 @@ declare module "react-native-ringtones" {
 	}
 
 	declare export var RINGTONE_TYPES: {
-		[key: "TYPE_ALL" | "TYPE_RINGTONE" | "TYPE_NOTIFICATION" | "TYPE_ALARM"]: number
+		all: number,
+		ringtone: number,
+		notification: number,
+		alarm: number,
 	};
 
 	declare export default class Ringtones {
