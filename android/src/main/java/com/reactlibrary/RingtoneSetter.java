@@ -2,7 +2,6 @@ package com.reactlibrary;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -30,9 +29,6 @@ public class RingtoneSetter {
 		if (!file.exists()) throw new FileNotFoundException("File not found: " + settings.getString("filepath"));
 
 		Uri uri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? getApi29RingtoneUri(file) : getRingtoneUri(file);
-		boolean shouldSetAsDefault = settings.hasKey("isSetDefault") && settings.getBoolean("isSetDefault");
-		if (shouldSetAsDefault) RingtoneManager.setActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE, uri);
-
 		boolean usedCacheFile = FileUtils.isBundledResource(context, settings.getString("filepath"));
 		if (usedCacheFile) file.delete();
 

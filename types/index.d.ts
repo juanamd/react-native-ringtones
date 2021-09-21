@@ -13,7 +13,6 @@ declare module "react-native-ringtones" {
 		isNotification?: boolean,
 		isAlarm?: boolean,
 		isMusic?: boolean,
-		isSetDefault?: boolean,
 	}
 
 	export const RINGTONE_TYPES: {
