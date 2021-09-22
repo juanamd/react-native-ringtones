@@ -50,7 +50,7 @@ public class RingtoneSetter {
 	}
 
 	private Uri getRingtoneUri(File file) throws IOException {
-		String externalFilesPath = context.getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getPath();
+		String externalFilesPath = context.getExternalFilesDir(getDestinationDirectory()).getPath();
 		String name = settings.getString("title") + "." + MimeTypeMap.getFileExtensionFromUrl(settings.getString("filepath"));
 		File externalFile = FileUtils.copyFile(file, externalFilesPath, name);
 
@@ -65,24 +65,29 @@ public class RingtoneSetter {
 	private ContentValues getContentValues(File ringtoneFile) {
 		ContentValues values = new ContentValues();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) values.put(MediaStore.MediaColumns.DATA, ringtoneFile.getAbsolutePath());
-		else values.put(MediaStore.MediaColumns.RELATIVE_PATH, getRelativePath());
+		else values.put(MediaStore.MediaColumns.RELATIVE_PATH, getDestinationDirectory());
 		values.put(MediaStore.MediaColumns.SIZE, ringtoneFile.length());
 		values.put(MediaStore.MediaColumns.TITLE, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.DISPLAY_NAME, settings.getString("title"));
 		values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType());
+		values.put(getContentValueType(), true);
 		if (settings.hasKey("artist")) values.put(MediaStore.Audio.Media.ARTIST, settings.getString("artist"));
-		if (settings.hasKey("isRingtone")) values.put(MediaStore.Audio.Media.IS_RINGTONE, settings.getBoolean("isRingtone"));
-		if (settings.hasKey("isNotification")) values.put(MediaStore.Audio.Media.IS_NOTIFICATION, settings.getBoolean("isNotification"));
-		if (settings.hasKey("isAlarm")) values.put(MediaStore.Audio.Media.IS_ALARM, settings.getBoolean("isAlarm"));
-		if (settings.hasKey("isMusic")) values.put(MediaStore.Audio.Media.IS_MUSIC, settings.getBoolean("isMusic"));
 		return values;
 	}
 
-	private String getRelativePath() {
-		if (settings.hasKey("isRingtone") && settings.getBoolean("isRingtone")) return Environment.DIRECTORY_RINGTONES;
-		if (settings.hasKey("isNotification") && settings.getBoolean("isNotification")) return Environment.DIRECTORY_NOTIFICATIONS;
-		if (settings.hasKey("isAlarm") && settings.getBoolean("isAlarm")) return Environment.DIRECTORY_ALARMS;
-		if (settings.hasKey("isMusic") && settings.getBoolean("isMusic")) return Environment.DIRECTORY_MUSIC;
+	private String getContentValueType() {
+		String type = settings.getString("type");
+		if (type.equals("ringtone")) return MediaStore.Audio.Media.IS_RINGTONE;
+		if (type.equals("notification")) return MediaStore.Audio.Media.IS_NOTIFICATION;
+		if (type.equals("alarm")) return MediaStore.Audio.Media.IS_ALARM;
+		return MediaStore.Audio.Media.IS_RINGTONE;
+	}
+
+	private String getDestinationDirectory() {
+		String type = settings.getString("type");
+		if (type.equals("ringtone")) return Environment.DIRECTORY_RINGTONES;
+		if (type.equals("notification")) return Environment.DIRECTORY_NOTIFICATIONS;
+		if (type.equals("alarm")) return Environment.DIRECTORY_ALARMS;
 		return null;
 	}
 

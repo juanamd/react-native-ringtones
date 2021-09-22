@@ -5,14 +5,11 @@ declare module "react-native-ringtones" {
 	}
 
 	export type RingtoneParams = {
+		type: "ringtone" | "notification" | "alarm",
 		filepath: string,
 		title: string,
 		mimeType?: string,
 		artist?: string,
-		isRingtone?: boolean,
-		isNotification?: boolean,
-		isAlarm?: boolean,
-		isMusic?: boolean,
 	}
 
 	export const RINGTONE_TYPES: {
