@@ -19,11 +19,11 @@ Ringtones.getRingtones(type: number): Promise<Ringtone[]>;
 // Get only the ringtones available from MediaStore
 Ringtones.getMediaStoreRingtones(): Promise<Ringtone[]>;
 
-// Get current active ringtone
-Ringtones.getActualRingtone(): Promise<Ringtone>;
+// Get current active ringtone. Use RINGTONE_TYPES constants (except "all" type)
+Ringtones.getActualRingtone(type: number): Promise<Ringtone>;
 
-// Set rintone
-Ringtones.setRingtone(uri: string): Promise<void>;
+// Set rintone. Use RINGTONE_TYPES constants (except "all" type)
+Ringtones.setRingtone(uri: string, type: number): Promise<void>;
 
 /* Add new ringtone.
 filepath can be either an audio file accessible by the app (including internal storage)
